@@ -121,7 +121,7 @@ services:
 
   fedora-messaging:
     container_name: fedora-messaging
-    image: docker.io/usercont/packit-service-fedmsg:dev
+    image: docker.io/usercont/packit-service-fedmsg:stg
     environment:
       FEDORA_MESSAGING_CONF: /home/packit/.config/fedora.toml
       REDIS_SERVICE_HOST: redis
@@ -133,7 +133,7 @@ services:
 
   centosmsg:
     container_name: centosmsg
-    image: docker.io/usercont/packit-service-centosmsg:dev
+    image: docker.io/usercont/packit-service-centosmsg:stg
     depends_on:
       - redis
     environment:
