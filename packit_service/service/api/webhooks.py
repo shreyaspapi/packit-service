@@ -313,6 +313,8 @@ class GitlabWebhook(Resource):
         interesting_events = {
             "Note Hook",
             "Merge Request Hook",
+            "Push Hook",
+            "Issue Hook",
         }
         event_type = request.headers.get("X-Gitlab-Event")
         _interested = event_type in interesting_events
