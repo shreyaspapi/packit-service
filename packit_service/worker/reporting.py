@@ -64,9 +64,10 @@ class StatusReporter:
             check_names = [check_names]
 
         for check in check_names:
-            self.set_status(
-                state=state, description=description, check_name=check, url=url
-            )
+            if state != CommitStatus.pending:
+                self.set_status(
+                    state=state, description=description, check_name=check, url=url
+                )
 
     def __set_pull_request_status(
         self, check_name: str, description: str, url: str, state: CommitStatus
@@ -90,8 +91,6 @@ class StatusReporter:
     def set_status(
         self, state: CommitStatus, description: str, check_name: str, url: str = "",
     ):
-        if state == CommitStatus.pending:
-            return
         # Required because Pagure API doesn't accept empty url.
         if not url and isinstance(self.project, PagureProject):
             url = "https://wiki.centos.org/Manuals/ReleaseNotes/CentOSStream"
