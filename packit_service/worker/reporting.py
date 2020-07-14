@@ -90,7 +90,7 @@ class StatusReporter:
     def set_status(
         self, state: CommitStatus, description: str, check_name: str, url: str = "",
     ):
-        if state == 1:
+        if state == CommitStatus.pending:
             return
         # Required because Pagure API doesn't accept empty url.
         if not url and isinstance(self.project, PagureProject):
