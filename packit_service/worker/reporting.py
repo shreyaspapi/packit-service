@@ -63,7 +63,7 @@ class StatusReporter:
         elif isinstance(check_names, str):
             check_names = [check_names]
 
-        logger.warning(f"This is the self {self}")
+        logger.warning(f"This is the self {self.base}")
 
         for check in check_names:
             if state != CommitStatus.pending:
