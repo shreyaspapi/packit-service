@@ -476,7 +476,7 @@ class MergeRequestGitlabEvent(AddPullRequestDbTrigger, AbstractGitlabEvent):
         action: GitlabEventAction,
         username: str,
         object_id: int,
-        object_iid: int,
+        pr_id: int,
         source_repo_name: str,
         source_repo_namespace: str,
         target_repo_namespace: str,
@@ -485,14 +485,12 @@ class MergeRequestGitlabEvent(AddPullRequestDbTrigger, AbstractGitlabEvent):
         commit_sha: str,
     ):
         super().__init__(
-            trigger=TheJobTriggerType.pull_request,
-            project_url=https_url,
-            pr_id=object_iid,
+            trigger=TheJobTriggerType.pull_request, project_url=https_url, pr_id=pr_id,
         )
         self.action = action
         self.user_login = username
         self.object_id = object_id
-        self.identifier = str(object_iid)
+        self.identifier = str(pr_id)
         self.source_repo_name = source_repo_name
         self.source_repo_namespace = source_repo_namespace
         self.target_repo_namespace = target_repo_namespace
@@ -548,7 +546,7 @@ class MergeRequestCommentGitlabEvent(AddPullRequestDbTrigger, AbstractGitlabEven
         self,
         action: GitlabEventAction,
         object_id: int,
-        object_iid: int,
+        pr_id: int,
         source_repo_namespace: str,
         source_repo_name: Optional[str],
         target_repo_namespace: str,
@@ -559,13 +557,11 @@ class MergeRequestCommentGitlabEvent(AddPullRequestDbTrigger, AbstractGitlabEven
         commit_sha: str,
     ):
         super().__init__(
-            trigger=TheJobTriggerType.pr_comment,
-            project_url=https_url,
-            pr_id=object_iid,
+            trigger=TheJobTriggerType.pr_comment, project_url=https_url, pr_id=pr_id,
         )
         self.action = action
         self.object_id = object_id
-        self.object_iid = object_iid
+        self.pr_id = pr_id
         self.source_repo_namespace = source_repo_namespace
         self.source_repo_name = source_repo_name
         self.target_repo_namespace = target_repo_namespace
@@ -574,7 +570,7 @@ class MergeRequestCommentGitlabEvent(AddPullRequestDbTrigger, AbstractGitlabEven
         self.user_login = username
         self.comment = comment
         self.commit_sha = commit_sha
-        self.identifier = str(object_iid)
+        self.identifier = str(pr_id)
 
     def get_dict(self, default_dict: Optional[Dict] = None) -> dict:
         result = super().get_dict()

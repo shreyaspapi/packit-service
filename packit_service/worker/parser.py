@@ -201,8 +201,8 @@ class Parser:
             logger.warning("No object id from the event.")
             return None
 
-        object_iid = event["object_attributes"]["iid"]
-        if not object_iid:
+        pr_id = event["object_attributes"]["iid"]
+        if not pr_id:
             logger.warning("No object iid from the event.")
             return None
 
@@ -236,7 +236,7 @@ class Parser:
             action=GitlabEventAction[action],
             username=username,
             object_id=object_id,
-            object_iid=object_iid,
+            pr_id=pr_id,
             source_repo_name=source_repo_name,
             source_repo_namespace=source_repo_namespace,
             target_repo_namespace=target_repo_namespace,
@@ -531,8 +531,8 @@ class Parser:
         if action not in {"reopen", "update"}:
             action = state
 
-        object_iid = nested_get(event, "merge_request", "iid")
-        if not object_iid:
+        pr_id = nested_get(event, "merge_request", "iid")
+        if not pr_id:
             logger.warning("No object iid from the event.")
 
         object_id = nested_get(event, "merge_request", "id")
@@ -541,7 +541,7 @@ class Parser:
 
         comment = nested_get(event, "object_attributes", "note")
         logger.info(
-            f"Gitlab MR id#{object_id} iid#{object_iid} comment: {comment!r} {action!r} event."
+            f"Gitlab MR id#{object_id} iid#{pr_id} comment: {comment!r} {action!r} event."
         )
 
         source_repo_path_with_namespace = nested_get(
@@ -580,7 +580,7 @@ class Parser:
         return MergeRequestCommentGitlabEvent(
             action=GitlabEventAction[action],
             object_id=object_id,
-            object_iid=object_iid,
+            pr_id=pr_id,
             source_repo_namespace=source_repo_namespace,
             source_repo_name=source_repo_name,
             target_repo_namespace=target_repo_namespace,
