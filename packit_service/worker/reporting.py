@@ -64,10 +64,9 @@ class StatusReporter:
             check_names = [check_names]
 
         for check in check_names:
-            if state != CommitStatus.pending:
-                self.set_status(
-                    state=state, description=description, check_name=check, url=url
-                )
+            self.set_status(
+                state=state, description=description, check_name=check, url=url
+            )
 
     def __set_pull_request_status(
         self, check_name: str, description: str, url: str, state: CommitStatus

@@ -207,9 +207,6 @@ class BaseBuildJobHelper:
     @property
     def status_reporter(self) -> StatusReporter:
         if not self._status_reporter:
-            logger.warning(
-                f"I am the meta data _________________------------ {self.metadata.event_dict}"
-            )
             self._status_reporter = StatusReporter(
                 self.project, self.metadata.commit_sha, self.metadata.pr_id
             )
