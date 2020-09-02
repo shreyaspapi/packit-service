@@ -259,12 +259,10 @@ class GitlabWebhook(Resource):
                 msg = "X-Gitlab-Token not in request.headers"
                 logger.info(msg)
                 self.create_confidential_issue_with_token()
-                return
             else:
                 # don't validate signatures when testing locally
                 logger.debug("Ain't validating token.")
-                return
-
+            return
         token = request.headers["X-Gitlab-Token"]
 
         if token in config.gitlab_webhook_tokens:

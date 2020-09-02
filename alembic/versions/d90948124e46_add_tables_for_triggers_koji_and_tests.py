@@ -5,6 +5,7 @@ Revises: dc1beda6749e
 Create Date: 2020-03-27 16:22:45.721822
 
 """
+
 import enum
 from typing import TYPE_CHECKING, Optional, Iterable
 
@@ -29,10 +30,7 @@ flexmock(config).should_receive("requirements").and_return(
 )
 
 # https://github.com/python/mypy/issues/2477#issuecomment-313984522 ^_^
-if TYPE_CHECKING:
-    Base = object
-else:
-    Base = declarative_base()
+Base = object if TYPE_CHECKING else declarative_base()
 
 
 # Models for upgrade

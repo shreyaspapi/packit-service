@@ -55,8 +55,7 @@ EXPECTED_TESTING_FARM_CHECK_NAME = "packit-stg/testing-farm-fedora-rawhide-x86_6
 
 @pytest.fixture()
 def whitelist():
-    w = Whitelist()
-    return w
+    return Whitelist()
 
 
 @pytest.mark.parametrize(
@@ -234,10 +233,22 @@ def events(request) -> List[Tuple[AbstractGithubEvent, bool]]:
         ("lojzo", "fero", True),
     ]
 
-    if request.param == "release":
+    if request.param == "issue_comment":
         return [
-            (ReleaseEvent("foo", "", "", ""), False),
-            (ReleaseEvent("lojzo", "", "", ""), True),
+            (
+                IssueCommentEvent(
+                    action=IssueCommentAction.created,
+                    issue_id=1,
+                    repo_namespace=namespace,
+                    repo_name="",
+                    target_repo="",
+                    project_url="",
+                    user_login=login,
+                    comment="",
+                ),
+                approved,
+            )
+            for namespace, login, approved in approved_accounts
         ]
     elif request.param == "pr":
         return [
@@ -277,22 +288,10 @@ def events(request) -> List[Tuple[AbstractGithubEvent, bool]]:
             )
             for namespace, login, approved in approved_accounts
         ]
-    elif request.param == "issue_comment":
+    elif request.param == "release":
         return [
-            (
-                IssueCommentEvent(
-                    action=IssueCommentAction.created,
-                    issue_id=1,
-                    repo_namespace=namespace,
-                    repo_name="",
-                    target_repo="",
-                    project_url="",
-                    user_login=login,
-                    comment="",
-                ),
-                approved,
-            )
-            for namespace, login, approved in approved_accounts
+            (ReleaseEvent("foo", "", "", ""), False),
+            (ReleaseEvent("lojzo", "", "", ""), True),
         ]
     return []
 

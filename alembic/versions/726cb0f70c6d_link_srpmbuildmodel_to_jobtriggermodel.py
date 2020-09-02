@@ -5,6 +5,7 @@ Revises: adbdc1c21d7e
 Create Date: 2020-08-05 18:14:20.277673
 
 """
+
 from alembic import op
 import sqlalchemy as sa
 from datetime import datetime
@@ -34,10 +35,7 @@ branch_labels = None
 depends_on = None
 
 
-if TYPE_CHECKING:
-    Base = object
-else:
-    Base = declarative_base()
+Base = object if TYPE_CHECKING else declarative_base()
 
 
 class CoprBuildModel(Base):
@@ -171,10 +169,9 @@ class SRPMBuildModel(Base):
 
     @classmethod
     def get_all(cls, session: Session):
-        srpm_builds = (
+        return (
             session.query(SRPMBuildModel).order_by(desc(SRPMBuildModel.id)).all()
         )
-        return srpm_builds
 
     def __repr__(self):
         return f"SRPMBuildModel(id={self.id} trigger={self.job_trigger_id})"

@@ -91,7 +91,7 @@ def koji_build_scratch_end():
 
 @pytest.fixture(scope="module")
 def pc_build_pr():
-    pc = PackageConfig(
+    return PackageConfig(
         jobs=[
             JobConfig(
                 type=JobType.copr_build,
@@ -100,12 +100,11 @@ def pc_build_pr():
             )
         ]
     )
-    return pc
 
 
 @pytest.fixture(scope="module")
 def pc_koji_build_pr():
-    pc = PackageConfig(
+    return PackageConfig(
         jobs=[
             JobConfig(
                 type=JobType.production_build,
@@ -114,7 +113,6 @@ def pc_koji_build_pr():
             )
         ]
     )
-    return pc
 
 
 @pytest.fixture(scope="module")

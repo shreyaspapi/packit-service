@@ -99,12 +99,7 @@ def optional_time(
 
 
 # https://github.com/python/mypy/issues/2477#issuecomment-313984522 ^_^
-if TYPE_CHECKING:
-    Base = object
-else:
-    Base = declarative_base()
-
-
+Base = object if TYPE_CHECKING else declarative_base()
 class JobTriggerModelType(str, enum.Enum):
     pull_request = "pull_request"
     branch_push = "branch_push"
@@ -174,10 +169,9 @@ class GitProjectModel(Base):
     @classmethod
     def get_projects(cls, first: int, last: int) -> Iterable["GitProjectModel"]:
         with get_sa_session() as session:
-            projects = session.query(GitProjectModel).order_by(
+            return session.query(GitProjectModel).order_by(
                 GitProjectModel.namespace
             )[first:last]
-            return projects
 
     @classmethod
     def get_namespace(cls, forge: str, namespace: str) -> Iterable["GitProjectModel"]:
@@ -199,10 +193,9 @@ class GitProjectModel(Base):
     ) -> Optional["GitProjectModel"]:
         """Return one project which matches said criteria"""
         with get_sa_session() as session:
-            project = cls.__choose_project(
+            return cls.__choose_project(
                 session=session, forge=forge, namespace=namespace, repo_name=repo_name
             )
-            return project
 
     @classmethod
     def get_project_prs(
@@ -232,13 +225,12 @@ class GitProjectModel(Base):
             )
             if not project:
                 return None
-            issues = (
+            return (
                 session.query(IssueModel)
                 .filter_by(project_id=project.id)
                 .order_by(desc(IssueModel.issue_id))
                 .all()
             )
-            return issues
 
     @classmethod
     def get_project_branches(
@@ -250,13 +242,12 @@ class GitProjectModel(Base):
             )
             if not project:
                 return None
-            branches = (
+            return (
                 session.query(GitBranchModel)
                 .filter_by(project_id=project.id)
                 .order_by(GitBranchModel.id)
                 .all()
             )
-            return branches
 
     @classmethod
     def get_project_releases(
@@ -268,13 +259,12 @@ class GitProjectModel(Base):
             )
             if not project:
                 return None
-            releases = (
+            return (
                 session.query(ProjectReleaseModel)
                 .filter_by(project_id=project.id)
                 .order_by(desc(ProjectReleaseModel.tag_name))
                 .all()
             )
-            return releases
 
     def __repr__(self):
         return (

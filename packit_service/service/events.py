@@ -510,11 +510,10 @@ class MergeRequestGitlabEvent(AddPullRequestDbTrigger, AbstractGitlabEvent):
         return result
 
     def get_base_project(self) -> GitProject:
-        fork = self.project.service.get_project(
+        return self.project.service.get_project(
             namespace=self.source_repo_namespace,
             repo=self.source_repo_name,
         )
-        return fork
 
 
 class PullRequestGithubEvent(AddPullRequestDbTrigger, AbstractGithubEvent):
@@ -593,11 +592,10 @@ class MergeRequestCommentGitlabEvent(AddPullRequestDbTrigger, AbstractGitlabEven
         return result
 
     def get_base_project(self) -> GitProject:
-        fork = self.project.service.get_project(
+        return self.project.service.get_project(
             namespace=self.source_repo_namespace,
             repo=self.source_repo_name,
         )
-        return fork
 
 
 class PullRequestCommentGithubEvent(AddPullRequestDbTrigger, AbstractGithubEvent):
@@ -956,14 +954,16 @@ class KojiBuildEvent(AbstractForgeIndependentEvent):
     @property
     def git_ref(self) -> str:
         if not self._git_ref:
-            if isinstance(self.db_trigger, PullRequestModel):
+            if (
+                isinstance(self.db_trigger, PullRequestModel)
+                or not isinstance(self.db_trigger, ProjectReleaseModel)
+                and not isinstance(self.db_trigger, GitBranchModel)
+            ):
                 self._git_ref = self.commit_sha
             elif isinstance(self.db_trigger, ProjectReleaseModel):
                 self._git_ref = self.db_trigger.tag_name
-            elif isinstance(self.db_trigger, GitBranchModel):
-                self._git_ref = self.db_trigger.name
             else:
-                self._git_ref = self.commit_sha
+                self._git_ref = self.db_trigger.name
         return self._git_ref
 
     @property

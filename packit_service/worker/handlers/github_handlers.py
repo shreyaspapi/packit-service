@@ -587,9 +587,7 @@ class GitHubPullRequestCommentCoprBuildHandler(CommentActionHandler):
             db_trigger=self.db_trigger,
             job_config=self.job_config,
         )
-        handler_results = cbh.run_copr_build()
-
-        return handler_results
+        return cbh.run_copr_build()
 
     def pre_check(self) -> bool:
         return (

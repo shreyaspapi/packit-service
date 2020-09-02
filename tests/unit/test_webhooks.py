@@ -45,9 +45,6 @@ def mock_config():
     ],
 )
 def test_validate_signature(mock_config, digest, is_good):
-    payload = b'{"zen": "Keep it logically awesome."}'
-    headers = {"X-Hub-Signature": f"sha1={digest}"}
-
     # flexmock config before import as it fails on looking for config
     flexmock(ServiceConfig).should_receive("get_service_config").and_return(
         flexmock(ServiceConfig)
@@ -57,7 +54,10 @@ def test_validate_signature(mock_config, digest, is_good):
     webhooks.config = mock_config
 
     with Flask(__name__).test_request_context():
+        payload = b'{"zen": "Keep it logically awesome."}'
         request._cached_data = request.data = payload
+        headers = {"X-Hub-Signature": f"sha1={digest}"}
+
         request.headers = headers
         if not is_good:
             with pytest.raises(ValidationFailed):
@@ -79,9 +79,6 @@ def test_validate_signature(mock_config, digest, is_good):
     ],
 )
 def test_validate_token(mock_config, token, is_good):
-    payload = b'{"project": {"path_with_namespace": "namespace/repo"}}'
-    headers = {"X-Gitlab-Token": f"{token}"}
-
     # flexmock config before import as it fails on looking for config
     flexmock(ServiceConfig).should_receive("get_service_config").and_return(
         flexmock(ServiceConfig)
@@ -92,7 +89,10 @@ def test_validate_token(mock_config, token, is_good):
 
     temp = webhooks.GitlabWebhook()
     with Flask(__name__).test_request_context():
+        payload = b'{"project": {"path_with_namespace": "namespace/repo"}}'
         request._cached_data = request.data = payload
+        headers = {"X-Gitlab-Token": f"{token}"}
+
         request.headers = headers
         if not is_good:
             with pytest.raises(ValidationFailed):
