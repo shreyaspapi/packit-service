@@ -439,7 +439,7 @@ class BaseBuildJobHelper:
                 check_names=check_names,
             )
             return
-        
+
         # "Packit-User" does not have access to project.
 
         self.request_project_access()
