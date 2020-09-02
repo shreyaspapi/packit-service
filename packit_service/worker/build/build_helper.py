@@ -135,8 +135,11 @@ class BaseBuildJobHelper:
     def request_project_access(self) -> None:
         try:
             self.base_project.request_access()
-        except GitlabAPIException:
-            logger.info("Access already requested")
+        except GitlabAPIException as err:
+            if "already exists in source" in str(err):
+                logger.info("Access already requested")
+            else:
+                raise err
 
     @property
     def api(self) -> PackitAPI:

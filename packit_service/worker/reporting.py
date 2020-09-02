@@ -98,13 +98,15 @@ class StatusReporter:
         Reporting build status with MR comment if no permission to the fork project
         """
 
+        header = ["| Type | Status |", "| ---- | ----- |"]
+
         if isinstance(check_names, str):
             check_names = [check_names]
         comment_msg = [
             f"| [{check}]({url}) | {state.name.upper()} |" for check in check_names
         ]
 
-        self.project.pr_comment(self.pr_id, "\n\n".join(comment_msg))
+        self.project.pr_comment(self.pr_id, "\n\n".join(header + comment_msg))
 
     def set_status(
         self,
